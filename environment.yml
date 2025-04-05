@@ -1,0 +1,21 @@
+name: TrendFlow
+channels:
+  - nvidia
+  - conda-forge
+  - pytorch
+dependencies:
+  - python=3.10
+  - pip
+  - matplotlib
+  - numpy=1.22.4
+  - pandas=2.0.3
+  - pytorch::pytorch=2.1.2
+  - pytorch::pytorch-cuda=11.8
+  - pip:
+    - nvidia-smi
+    - nbclassic
+    - wandb
+    - tqdm
+    - black
+    - transformers==4.29.2
+    - datasets

@@ -1,0 +1,34 @@
+# All advanced model hyperparameters and flags
+
+# Basic parameters
+batch_size: 16
+learning_rate: 0.0001
+hidden_dim: 10
+drop_rate: 0.9
+embed_dim: 768
+adam_epsilon: 1e-8
+n_epochs: 10
+max_len: 20
+weight_decay: 0.01
+
+# Layer-wise Learning Rate Decay
+use_llrd: true
+lr_multiplier: 0.95  # Each layer's LR will be 95% of the previous layer
+
+# Layer Re-initialization
+use_reinit: false
+reinit_n_layers: 0
+
+# Warmup
+use_warmup: true
+warmup_ratio: 0.1  # 10% of steps for warmup
+
+# Stochastic Weight Averaging
+use_swa: false
+swa_start_ratio: 0.5  # Start SWA at epoch 2 (50% of training)
+swa_lr: 0.00001  # Target SWA learning rate (0.00001)
+swa_anneal_epochs: 2  # Take 2 epochs to transition to SWA LR
+swa_anneal_strategy: "cos"  # Use cosine annealing for smooth transition
+
+# Early Stopping
+early_stop_patience: 5

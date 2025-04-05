@@ -1,0 +1,16 @@
+batch_size: 128
+
+learning_rate: 0.001
+
+hidden_dim: 10
+
+drop_rate: 0.9
+#embed_dim is initial 10 but I change for fitting bert_model outputs size
+embed_dim: 768 
+
+adam_epsilon: 0.00000001
+
+n_epochs: 10
+
+max_len: 20
+
