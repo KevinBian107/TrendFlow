@@ -7,16 +7,15 @@ from tqdm import tqdm as progress_bar
 from utils import set_seed, setup_gpus, check_directories
 from dataloader import get_dataloader, check_cache, prepare_features, process_data, prepare_inputs
 from load import load_data, load_tokenizer
-from model import ScenarioModel, SupConModel, CustomModel
+from model import ScenarioModel, CustomModel
 from torch import nn
 import wandb
 from uuid import uuid4
 import json
 from pathlib import Path
-from loss import SupConLoss
 
 
-def baseline_train(args, model, datasets, criterion, tokenizer, logger, resume_id = False):
+def baseline_train(args, model, datasets, tokenizer, logger, resume_id = False):
     if not resume_id:
         [f.unlink() for f in Path("checkpoints/").glob("*") if f.is_file()] 
         train_id = str(uuid4())
@@ -27,6 +26,7 @@ def baseline_train(args, model, datasets, criterion, tokenizer, logger, resume_i
     
     # task1: setup train dataloader
     train_dataloader = get_dataloader(args,datasets,split="train")
+    criterion = nn.CrossEntropyLoss()
 
     # task2: setup model's optimizer_scheduler if you have
     optimizer = torch.optim.Adam(model.parameters(),lr = args.learning_rate)
@@ -34,9 +34,9 @@ def baseline_train(args, model, datasets, criterion, tokenizer, logger, resume_i
     
     best_avg_loss = float("inf")
     if resume_id:
-        wandb.init(project="self-supervised-transformers", config=vars(args), id = resume_id, resume="must")
+        wandb.init(project="TrendFlow-RTModel", config=vars(args), id = resume_id, resume="must")
     else:
-        wandb.init(project="self-supervised-transformers", config=vars(args),id = train_id)
+        wandb.init(project="TrendFlow-RTModel", config=vars(args),id = train_id)
     # task3: write a training loop
     start_epoch = 0
     #if there are wandb can be restore
@@ -113,9 +113,9 @@ def custom_train(args, model, datasets, tokenizer, logger, resume_id=False):
     logger.info(f"Checkpoint will be saved to: {checkpoint_path}")
 
     if resume_id:
-        wandb.init(project="self-supervised-transformers", config=vars(args), id=resume_id, resume="must")
+        wandb.init(project="TrendFlow-RTModel", config=vars(args), id=resume_id, resume="must")
     else:
-        wandb.init(project="self-supervised-transformers", config=vars(args), id=train_id)
+        wandb.init(project="TrendFlow-RTModel", config=vars(args), id=train_id)
 
     criterion = torch.nn.CrossEntropyLoss()
     train_dataloader = get_dataloader(args, datasets, split="train")
@@ -136,7 +136,7 @@ def custom_train(args, model, datasets, tokenizer, logger, resume_id=False):
 
     if getattr(args, 'use_warmup', False):
         logger.info("Using linear schedule with warmup.")
-        scheduler = model.setup_scheduler(train_dataloader, args)
+        scheduler = model.setup_scheduler(optimizer, train_dataloader, args)
     else:
         logger.info("Using a default MultiStepLR or no scheduler at all.")
         scheduler = torch.optim.lr_scheduler.MultiStepLR(
@@ -195,7 +195,7 @@ def custom_train(args, model, datasets, tokenizer, logger, resume_id=False):
 
         logger.info(f"Epoch {epoch} | Train Loss: {avg_train_loss:.4f} | Train Acc: {train_acc:.4f}")
 
-        val_acc, avg_val_loss = run_eval(args, model, datasets, tokenizer, logger, split='validation')
+        val_acc, avg_val_loss = run_eval(args, model, datasets, criterion, tokenizer, logger, split='validation')
 
         current_lr = scheduler.get_last_lr()[0] if hasattr(scheduler, 'get_last_lr') else args.learning_rate
         wandb.log({
@@ -273,15 +273,9 @@ def run_eval(args, model, datasets, criterion, tokenizer, logger, split='validat
         inputs,labels = prepare_inputs(batch,use_text=False)
         logits = model(inputs, labels)
 
-        if isinstance(criterion, SupConLoss):
-            logits = logits.unsqueeze(1)
-            loss = criterion(logits,labels)
-            acc = None # contrastive loss does not have acc measure
-        
-        else:
-            loss = criterion(logits,labels)
-            tem = (logits.argmax(1) == labels).float().sum()
-            acc += tem.item()
+        loss = criterion(logits,labels)
+        tem = (logits.argmax(1) == labels).float().sum()
+        acc += tem.item()
 
         losses += loss.item()
         pbar.set_description(f"{split}_loss: {loss.item():.4f}")

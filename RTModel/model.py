@@ -35,13 +35,9 @@ class ScenarioModel(nn.Module):
 
     def forward(self, inputs, targets):
         """
-        task1: 
-            feeding the input to the encoder, 
-        task2: 
-            take the last_hidden_state's <CLS> token as output of the
-            encoder, feed it to a drop_out layer with the preset dropout rate in the argparse argument, 
-        task3:
-            feed the output of the dropout layer to the Classifier which is provided for you.
+        1. feeding the input to the encoder, 
+        2. take the last_hidden_state's <CLS> token as output of the encoder, feed it to a drop_out layer with the preset dropout rate in the argparse argument, 
+        3. feed the output of the dropout layer to the Classifier which is provided for you.
         """
         # encoder_outputs shape: ((batch_size, sequence_length, hidden_size),(batch_size, hidden_size))
         encoder_outputs = self.encoder(input_ids=inputs['input_ids'], attention_mask=inputs['attention_mask'])

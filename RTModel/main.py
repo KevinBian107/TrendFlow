@@ -3,14 +3,13 @@ import pprint
 from utils import set_seed, setup_gpus, check_directories
 from dataloader import get_dataloader, check_cache, prepare_features, process_data, prepare_inputs
 from load import load_data, load_tokenizer
-from model import ScenarioModel, SupConModel, CustomModel, LoRAModel
+from model import ScenarioModel, CustomModel, LoRAModel
 from torch import nn
-from trainer import baseline_train,custom_train,supcon_train, run_eval
+from trainer import baseline_train, custom_train, run_eval
 import torch
 import logging
 import argparse
 from pprint import pformat
-from loss import SupConLoss
 
 class Trainer():
     def __init__(self,experiment_config_path, model_config_path):
