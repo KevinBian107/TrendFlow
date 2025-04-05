@@ -16,6 +16,9 @@ Scrapes real-time content trending (text and images) from social media (Any web 
 
 - Use Cases: User goes to the website and enters web URL and interest content in the form of a text message AI Agent scrapes through the website and identifies trending concepts. The scraped information will be provided to Model
 
+- User Interaction Flow
+![User Interaction Flow](assets/images/User_Digram.png)
+
 ## 🏗️ System Architecture Overview
 
 ```mermaid
