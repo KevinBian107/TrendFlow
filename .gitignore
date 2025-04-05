@@ -1,0 +1,11 @@
+.env
+__pycache__
+.ipynb_checkpoints
+assets/
+results/
+wandb/
+checkpoints/
+.vscode/
+trainer.log
+*.pt
+*.json
