@@ -1,0 +1,27 @@
+# Overall experiment setup
+
+task: 'custom'
+
+input_dir: 'assets'
+
+output_dir: 'results'
+
+log_dir: 'logs'
+
+model: 'bert'
+
+seed: 42
+
+dataset: 'amazon'
+
+ignore_cache: False
+
+debug: False
+
+do_train: False
+
+do_eval: False
+
+distributed: False
+
+save_model: True

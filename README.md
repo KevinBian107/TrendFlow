@@ -66,13 +66,14 @@ Run baseline:
 ```bash
 python main.py
 ```
-Other Experience
+
+Run advanced setup:
 ```bash
-python main.py --experiment_config experimental_configs/experiment_config_advanced.yaml --model_config model_configs/model_config_advanced.yaml
+python main.py --experiment_config experimental_configs/advanced.yaml --model_config model_configs/advanced.yaml
 
 ```
 
-LoRA:
+Run LoRA setup:
 ```bash
 python main.py --experiment_config experimental_configs/LoRA.yaml --model_config model_configs/LoRA.yaml
 ```
