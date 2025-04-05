@@ -21,18 +21,22 @@ There are 2 main use cases:
 ![User Interaction Flow](assets/images/User_Digram.png)
 
 ## 🏗️ System Architecture Overview
+The following is an intergrated view of both training and inference in our system.
 
 ```mermaid
 flowchart TD
-    A[URL + Domain Input] --> B[Scrape Bot]
-    B --> C["Raw Posts (Text + Images)"]
-    C --> H2["Inference"]
-    C --> D["Preprocessing + Tokenization + Trendiness Rating"]
-    D --> F["Fine-tuning Engine"]
-    F --> G["Semantic Clustering in Latent Space"]
-    G --> H1["Classifier (given user content, rate it)"]
-    G --> H2["Decoder (given 100 top daily scrape, give insight)"]
-    H1 --> I["Trend Summary Output"]
+    A[URL + Domain Input] --train/inference--> B[Scrape Bot]
+    A --train--> D2["API Called Weekly Data"]
+    D2 --train--> F["Fine-tuned RTModel"]
+    B --train/inference--> C["Raw Posts (Text + Images)"]
+    C --train/inference--> D1["Preprocessing + Tokenization + Trendiness Rating"]
+    D1 --train--> F["Fine-tuned RTModel"]
+    D1 --inference--> H2["Transfered Decoder"]
+    F --train--> G["Semantic Clustering in Latent Space"]
+    G --train/inference--> H1["Classifier"]
+    H2 --inference--> I2["Given User Content, Rate Its Popularity"]
+    G --inference--> H2["Transfered Decoder"]
+    H1 --inference--> I1["Given 100 Top Daily Scrape, Give Insight"]
 
 ```
 
