@@ -23,19 +23,18 @@ There are 2 main use cases:
 ## 🏗️ System Architecture Overview
 
 ```mermaid
-flowchart LR
+flowchart TD
     A[URL + Domain Input] --> B[Scrape Bot]
     B --> C["Raw Posts (Text + Images)"]
-    C --> D[Preprocessing + Tokenization]
-    D --> E[Vectorization + Trendiness Rating]
-    E --> F["Real-time Fine-tuning Engine"]
+    C --> H2["Inference"]
+    C --> D["Preprocessing + Tokenization + Trendiness Rating"]
+    D --> F["Fine-tuning Engine"]
     F --> G["Semantic Clustering in Latent Space"]
-    G --> H["Decoder (e.g. GPT/BERT)"]
-    H --> I["Trend Summary Output"]
+    G --> H1["Classifier (given user content, rate it)"]
+    G --> H2["Decoder (given 100 top daily scrape, give insight)"]
+    H1 --> I["Trend Summary Output"]
 
 ```
-
-![User Interaction Flow](assets/images/Data_Flow_Chart.png)
 
 ---
 
